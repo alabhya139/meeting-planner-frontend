@@ -1,0 +1,20 @@
+.header-month{
+    text-align: center;
+    padding: 2vmin;
+}
+
+.button-group{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-group{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.container-fluid{
+    background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+}

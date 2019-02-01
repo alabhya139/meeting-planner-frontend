@@ -1,0 +1,52 @@
+
+
+.wrap{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-column-gap: 1em;
+}
+
+.outlet{
+    display: flex;
+    align-self: center;
+    justify-self: center;
+}
+
+
+.main-image{
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.main-heading{
+    text-decoration-style: solid;
+    font-size: 10vmin;
+    font-family: 'Zilla Slab Highlight', cursive;
+    color: #455a64;
+    text-align: center;
+}
+
+.slogan{
+    font-size: 5vmin;
+    font-family: 'Bahiana', cursive;
+    color: #455a64;
+    text-align: center;
+}
+@media only screen and (max-width:600px){
+    .content{
+        display: none;
+    }
+
+    .wrap{
+        grid-template-columns: 1fr;
+    }
+
+    .outlet{
+        width: 90vw;
+        align-content: center;
+        justify-content: center;
+        margin-top: 16vmin;
+    }
+}

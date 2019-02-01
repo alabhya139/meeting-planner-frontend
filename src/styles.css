@@ -1,1 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Bahiana|Zilla+Slab+Highlight');
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+body{
+    font-family: 'Roboto', sans-serif;
+    background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+    height: 100vh;
+}
