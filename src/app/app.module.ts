@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {ToastrModule} from 'ngx-toastr';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,6 +16,9 @@ import { UserManagementService } from './services/user-management.service';
 import { UserHomeComponent } from './user-home/user-home.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CreateEventComponent } from './create-event/create-event.component';
+import { AdminHomeComponent } from './admin-home/admin-home.component';
+import { MeetingInfoComponent } from './meeting-info/meeting-info.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +27,10 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     SignupComponent,
     CreditComponent,
     HomeComponent,
-    UserHomeComponent
+    UserHomeComponent,
+    CreateEventComponent,
+    AdminHomeComponent,
+    MeetingInfoComponent
   ],
   imports: [
     BrowserModule,
@@ -34,9 +42,13 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
-    })
+    }),
+    ToastrModule.forRoot()
   ],
-  providers: [UserManagementService],
+  providers: [
+    UserManagementService,
+    CookieService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

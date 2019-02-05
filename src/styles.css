@@ -1,9 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import url('https://fonts.googleapis.com/css?family=Bahiana|Zilla+Slab+Highlight');
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
+@import '~ngx-toastr/toastr.css';
 
 body{
     font-family: 'Roboto', sans-serif;
-    background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #5B86E5, #36D1DC);
     height: 100vh;
 }
+
+#toast-container > div {
+    opacity:1;
+  }

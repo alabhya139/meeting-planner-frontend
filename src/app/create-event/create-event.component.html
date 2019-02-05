@@ -1,0 +1,86 @@
+<div class="container">
+  <h1 class="heading">Create Event</h1>
+  <div class="col-md-6 formGroup">
+
+    <form [formGroup]="meetingForm" (submit)="createMeeting()">
+      <div class="meeting-title text-box">
+        <label>Meeting Title</label>
+        <input formControlName="meetingTitle" type="text">
+      </div>
+
+      <div class="date">
+        <div class="start-date">
+          <label for="dateofbirth">Choose Meeting Start Date</label>
+          <input formControlName="startDate" class="date-picker" type="date" name="dateofbirth" id="dateofbirth" data-date-format="DD MMMM YYYY">
+        </div>
+        <div class="end-date">
+          <label for="dateofbirth">Choose Meeting End Date</label>
+          <input formControlName="endDate" class="date-picker" type="date" name="dateofbirth" id="dateofbirth" data-date-format="DD MMMM YYYY">
+        </div>
+      </div>
+
+      <div class="choose-time">
+        <div class="time">
+          <label>Choose Start Hour</label>
+          <select formControlName = "startHour" id="soflow">
+            <option>HH</option>
+            <option *ngFor="let hour of hour">{{hour}}</option>
+          </select>
+
+          <i class="fas fa-caret-left"></i>
+          <i class="fas fa-caret-right"></i>
+
+          <select formControlName = "startMinute" id="soflow">
+            <option>MM</option>
+            <option *ngFor="let minute of minute">{{minute}}</option>
+          </select>
+
+          <i class="fas fa-caret-left"></i>
+          <i class="fas fa-caret-right"></i>
+          <select formControlName = "startTime" id="soflow">
+            <option>AM</option>
+            <option>PM</option>
+          </select>
+        </div>
+
+        <div class="time">
+          <label>Choose End Hour</label>
+          <select formControlName = "endHour" id="soflow">
+            <option>HH</option>
+            <option *ngFor="let hour of hour">{{hour}}</option>
+          </select>
+
+          <i class="fas fa-caret-left"></i>
+          <i class="fas fa-caret-right"></i>
+
+          <select formControlName = "endMinute" id="soflow">
+            <option>MM</option>
+            <option *ngFor="let minute of minute">{{minute}}</option>
+          </select>
+
+          <i class="fas fa-caret-left"></i>
+          <i class="fas fa-caret-right"></i>
+          <select formControlName = "endTime" id="soflow">
+            <option>AM</option>
+            <option>PM</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="meeting-title text-box">
+        <label>Meeting Place</label>
+        <input formControlName = "meetingPlace" type="text">
+      </div>
+
+      <div class="meeting-desc text-box">
+        <label>Meeting Description</label>
+        <textarea formControlName = "meetingDescription" type="textarea"></textarea>
+      </div>
+
+      <div class="submit-button">
+        <input id="button" type="submit" class="btn btn-dark" value="Create Meeting">
+      </div>
+    </form>
+  </div>
+
+</div>

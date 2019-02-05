@@ -1,20 +1,43 @@
-.header-month{
-    text-align: center;
-    padding: 2vmin;
+.header-month {
+  text-align: center;
+  padding: 2vmin;
 }
 
-.button-group{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+.button-group {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.btn-group{
-    display: flex;
-    justify-content: center;
-    align-content: center;
+.btn-group {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-bottom: 2vmin;
 }
 
-.container-fluid{
-    background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+.container-fluid {
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+
+.cal-disabled {
+  background-color: rgb(255, 255, 255);
+  pointer-events: none;
+}
+
+.cal-disabled .cal-day-number {
+  opacity: 0.1;
+}
+
+.month-button {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding: 0;
+  margin-bottom: 2vmin;
+}
+
+.view {
+  padding-bottom: 4vmin;
 }

@@ -46,10 +46,10 @@
     margin-left: auto;
     margin-right: auto;
     margin-top: 2vmin;
-    border: 2px solid #039be5;
+    border: 2px solid #ffffff;
     border-radius: 50px;
     padding: 5px;
-    color: #039be5;
+    color: #ffffff;
     outline: none;
 }
 
@@ -62,7 +62,31 @@
 
 .login-footer a{
     text-decoration: none;
-    color: #6d6d6d;
+    color: #ffffff;
+}
+
+.invalid {
+    border: 1px solid #e50303;
+}
+
+.invalid ::placeholder{
+    color: #e50303;
+}
+
+.invalid i{
+    color: #e50303;
+}
+
+.invalidError{
+    font-size: 8pt;
+    color: #e50303;
+    text-align: center;
+    margin-top: 0;
+}
+
+.disabled{
+    border: 2px solid rgb(194, 194, 194);
+    color: rgb(194, 194, 194);
 }
 
 @media only screen and (max-width:600px){

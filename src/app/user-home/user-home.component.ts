@@ -1,129 +1,167 @@
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { CalendarEvent, CalendarMonthViewDay, CalendarEventAction } from 'angular-calendar';
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewChild,
-  TemplateRef
-} from '@angular/core';
-import {
+  isSameMonth,
+  isSameDay,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
   startOfDay,
   endOfDay,
-  subDays,
+  format,
   addDays,
-  endOfMonth,
-  isSameDay,
-  isSameMonth,
-  addHours
+  addWeeks,
+  addMonths,
+  subDays,
+  subWeeks,
+  subMonths
 } from 'date-fns';
-import { Subject } from 'rxjs';
-import {
-  CalendarEvent,
-  CalendarEventAction,
-  CalendarEventTimesChangedEvent,
-  CalendarView
-} from 'angular-calendar';
+import { Observable } from 'rxjs';
+import { MeetingService } from '../services/meeting.service';
 
-const colors: any = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3'
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF'
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA'
-  }
-};
+type CalendarPeriod = 'day' | 'week' | 'month';
+
+function addPeriod(period: CalendarPeriod, date: Date, amount: number): Date {
+  return {
+    day: addDays,
+    week: addWeeks,
+    month: addMonths
+  }[period](date, amount);
+}
+
+function subPeriod(period: CalendarPeriod, date: Date, amount: number): Date {
+  return {
+    day: subDays,
+    week: subWeeks,
+    month: subMonths
+  }[period](date, amount);
+}
+
+function startOfPeriod(period: CalendarPeriod, date: Date): Date {
+  return {
+    day: startOfDay,
+    week: startOfWeek,
+    month: startOfMonth
+  }[period](date);
+}
+
+function endOfPeriod(period: CalendarPeriod, date: Date): Date {
+  return {
+    day: endOfDay,
+    week: endOfWeek,
+    month: endOfMonth
+  }[period](date);
+}
+
+interface Film {
+  id: number;
+  title: string;
+  release_date: string;
+}
+
+function getTimezoneOffsetString(date: Date): string {
+  const timezoneOffset = date.getTimezoneOffset();
+  const hoursOffset = String(
+    Math.floor(Math.abs(timezoneOffset / 60))
+  ).padStart(2, '0');
+  const minutesOffset = String(Math.abs(timezoneOffset % 60)).padEnd(2, '0');
+  const direction = timezoneOffset > 0 ? '-' : '+';
+  return `T00:00:00${direction}${hoursOffset}${minutesOffset}`;
+}
 
 @Component({
   selector: 'mwl-demo-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['user-home.component.css'],
-  templateUrl: 'user-home.component.html'
+  templateUrl: 'user-home.component.html',
+  styleUrls: ['user-home.component.css']
 })
-export class UserHomeComponent {
-  @ViewChild('modalContent')
-  modalContent: TemplateRef<any>;
+export class UserHomeComponent implements OnInit {
+  view: CalendarPeriod = 'month';
 
-  view: CalendarView = CalendarView.Month;
+  prevBtnDisabled: boolean = false;
 
-  CalendarView = CalendarView;
+  nextBtnDisabled: boolean = false;
 
   viewDate: Date = new Date();
 
-  modalData: {
-    action: string;
-    event: CalendarEvent;
-  };
+  events$: Observable<Array<CalendarEvent>>;
+
+  activeDayIsOpen: boolean = false;
+
+  minDate: Date = subMonths(new Date(), 0);
+
+  maxDate: Date = addMonths(new Date(), 12);
 
   actions: CalendarEventAction[] = [
     {
       label: '<i class="fa fa-fw fa-pencil"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
+        
       }
     },
     {
       label: '<i class="fa fa-fw fa-times"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter(iEvent => iEvent !== event);
-        this.handleEvent('Deleted', event);
+        console.log(event)
       }
     }
   ];
 
-  refresh: Subject<any> = new Subject();
+  constructor(private meetingService: MeetingService) {
+    this.dateOrViewChanged();
+  }
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.red,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.blue,
-      allDay: true
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    }
-  ];
+  ngOnInit(): void {
+    this.fetchEvents();
+  }
 
-  activeDayIsOpen: boolean = true;
+  fetchEvents(): void {
+    const getStart: any = {
+      month: startOfMonth,
+      week: startOfWeek,
+      day: startOfDay
+    }[this.view];
 
-  constructor() {}
+    const getEnd: any = {
+      month: endOfMonth,
+      week: endOfWeek,
+      day: endOfDay
+    }[this.view];
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    this.events$ = this.meetingService.getAllMeetings()
+      .pipe(
+        map((results) => {
+          let datas = results;
+          let meeting = datas['data']
+          
+          return meeting.map((meeting) => {
+            return {
+              id: meeting.meetingId,
+              adminId: meeting.adminId,
+              userId: meeting.userId,
+              title: meeting.meetingTitle,
+              start: new Date(
+                meeting.startDate
+              ),
+              end: new Date(meeting.endDate),
+              actions: this.actions
+            };
+          });
+        })
+      );
+  }
+
+  dayClicked({
+    date,
+    events
+  }: {
+    date: Date;
+    events: Array<CalendarEvent<{ film: Film }>>;
+  }): void {
     if (isSameMonth(date, this.viewDate)) {
-      this.viewDate = date;
       if (
         (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
         events.length === 0
@@ -131,38 +169,61 @@ export class UserHomeComponent {
         this.activeDayIsOpen = false;
       } else {
         this.activeDayIsOpen = true;
+        this.viewDate = date;
       }
     }
   }
 
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd
-  }: CalendarEventTimesChangedEvent): void {
-    event.start = newStart;
-    event.end = newEnd;
-    this.handleEvent('Dropped or resized', event);
-    this.refresh.next();
+  eventClicked(event: CalendarEvent): void {
+    console.log(event)
   }
 
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
 
+  increment(): void {
+    this.changeDate(addPeriod(this.view, this.viewDate, 1));
   }
 
-  addEvent(): void {
-    this.events.push({
-      title: 'New event',
-      start: startOfDay(new Date()),
-      end: endOfDay(new Date()),
-      color: colors.red,
-      draggable: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
+  decrement(): void {
+    this.changeDate(subPeriod(this.view, this.viewDate, 1));
+  }
+
+  today(): void {
+    this.changeDate(new Date());
+  }
+
+  dateIsValid(date: Date): boolean {
+    return date >= this.minDate && date <= this.maxDate;
+  }
+
+  changeDate(date: Date): void {
+    this.viewDate = date;
+    this.dateOrViewChanged();
+  }
+
+  changeView(view: CalendarPeriod): void {
+    this.view = view;
+    this.dateOrViewChanged();
+  }
+
+  dateOrViewChanged(): void {
+    this.prevBtnDisabled = !this.dateIsValid(
+      endOfPeriod(this.view, subPeriod(this.view, this.viewDate, 1))
+    );
+    this.nextBtnDisabled = !this.dateIsValid(
+      startOfPeriod(this.view, addPeriod(this.view, this.viewDate, 1))
+    );
+    if (this.viewDate < this.minDate) {
+      this.changeDate(this.minDate);
+    } else if (this.viewDate > this.maxDate) {
+      this.changeDate(this.maxDate);
+    }
+  }
+
+  beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
+    body.forEach(day => {
+      if (!this.dateIsValid(day.date)) {
+        day.cssClass = 'cal-disabled';
       }
     });
-    this.refresh.next();
   }
 }

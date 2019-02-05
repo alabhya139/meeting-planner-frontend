@@ -1,21 +1,28 @@
 <div class="login-box">
-    <img class="image" src="../../../assets/images/login.png" alt="">
-    <form [formGroup]="loginForm" (submit)="login()">
-        <div class="text-box">
-            <i class="fas fa-at"></i>
-          <input formControlName="email" type="text" placeholder="Enter email">
-        </div>
-      
-        <div class="text-box">
-            <i class="fas fa-unlock-alt"></i>
-          <input formControlName="password" type="password" placeholder="Enter Password">
-        </div>
-      
-        <input type="submit" class="button shadow" value="Login">
-    
-        <div class="login-footer">
-          <a href="" class="forgot-password">Forgot Password?</a>
-          <a href="" class="signup">Don't have an account? Register!</a>
-        </div>
-    </form>
-  </div>
+  <img class="image" src="../../../assets/images/login.png" alt="">
+  <form [formGroup]="loginForm" (submit)="login()">
+    <div class="text-box" [ngClass]="{'invalid':
+        (loginForm.get('email').touched || loginForm.get('email').dirty) && loginForm.get('email').invalid}">
+      <i class="fas fa-at"></i>
+      <input formControlName="email" type="text" placeholder="Enter email">
+    </div>
+
+    <div *ngIf="(loginForm.get('email').touched || loginForm.get('email').dirty) && loginForm.get('email').invalid" class="invalidError">Please enter a
+      valid email</div>
+
+    <div class="text-box" [ngClass]="{'invalid':
+        (loginForm.get('password').touched || loginForm.get('password').dirty) && loginForm.get('password').invalid}">
+      <i class="fas fa-unlock-alt"></i>
+      <input formControlName="password" type="password" placeholder="Enter Password">
+    </div>
+    <div *ngIf="(loginForm.get('password').touched || loginForm.get('password').dirty) && loginForm.get('password').invalid" class="invalidError">Please
+      enter password</div>
+
+    <input [ngClass]="{'disabled':loginForm.invalid}" [disabled]="loginForm.invalid" type="submit" class="button shadow" value="Login">
+
+    <div class="login-footer">
+      <a href="" class="forgot-password">Forgot Password?</a>
+      <a [routerLink]="['/home/signup']" class="signup">Don't have an account? Register!</a>
+    </div>
+  </form>
+</div>

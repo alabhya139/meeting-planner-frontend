@@ -17,4 +17,17 @@ export class UserManagementService {
       .set('password',data.password);
     return this.http.post(`${this.baseUrl}login`,params);
   }
+
+  public signUpFunction(data):Observable<any> {
+
+    const params = new HttpParams()
+    .set('firstName',data.firstName)
+    .set('lastName',data.lastName)
+    .set('email',data.email)
+    .set('mobileNumber',data.mobileNumber)
+    .set('password',data.password)
+    .set('isAdmin',data.isAdmin);
+
+    return this.http.post(`${this.baseUrl}signup`,params);
+  }
 }

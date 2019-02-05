@@ -1,30 +1,61 @@
 <div class="login-box">
-    <h1 class="heading">REGISTER</h1>
-    <div class="text-box">
-        <i class="fas fa-user-edit"></i>
-      <input type="text" placeholder="First Name">
+    <div *ngIf="emailSent===true" class="alert alert-success" role="alert">
+        {{httpResponse.message}}
     </div>
-  
-    <div class="text-box">
-        <i class="fas fa-user-edit"></i>
-      <input type="text" placeholder="Last Name">
+  <h1 *ngIf="emailSent===false" class="heading">REGISTER</h1>
+  <form *ngIf="emailSent===false" [formGroup]="signupForm" (submit)="signUp()">
+    <div class="text-box" [ngClass]="{'invalid':
+    (signupForm.get('firstName').touched || signupForm.get('firstName').dirty) 
+    && signupForm.get('firstName').invalid}">
+      <i class="fas fa-user-edit"></i>
+      <input formControlName="firstName" type="text" placeholder="First Name">
     </div>
+    <div *ngIf="(signupForm.get('firstName').touched || signupForm.get('firstName').dirty) 
+    && signupForm.get('firstName').invalid"
+      class="invalidError">Please enter first name</div>
 
     <div class="text-box">
+      <i class="fas fa-user-edit"></i>
+      <input formControlName="lastName" type="text" placeholder="Last Name">
+    </div>
+    <div *ngIf="(signupForm.get('lastName').touched || signupForm.get('lastName').dirty) 
+    && signupForm.get('lastName').invalid"
+      class="invalidError">Please enter last name</div>
+
+    <div class="text-box" [ngClass]="{'invalid':
+    (signupForm.get('email').touched || signupForm.get('email').dirty) && signupForm.get('email').invalid}">
+      <i class="fas fa-at"></i>
+      <input formControlName="email" type="text" placeholder="Email">
+    </div>
+    <div *ngIf="(signupForm.get('email').touched || signupForm.get('email').dirty) 
+    && signupForm.get('email').invalid"
+      class="invalidError">Please enter a valid email</div>
+
+      <div class="text-box" [ngClass]="{'invalid':
+      (signupForm.get('mobileNumber').touched || signupForm.get('mobileNumber').dirty) && signupForm.get('mobileNumber').invalid}">
         <i class="fas fa-at"></i>
-      <input type="text" placeholder="Email">
+        <input formControlName="mobileNumber" type="text" placeholder="Mobile Number">
+      </div>
+      <div *ngIf="(signupForm.get('mobileNumber').touched || signupForm.get('mobileNumber').dirty) 
+      && signupForm.get('mobileNumber').invalid"
+        class="invalidError">Please enter a valid mobile number</div>
+
+    <div class="text-box" [ngClass]="{'invalid':
+    (signupForm.get('password').touched || signupForm.get('password').dirty) && signupForm.get('password').invalid}">
+      <i class="fas fa-unlock-alt"></i>
+      <input formControlName = "password" type="password" placeholder="Password">
+    </div>
+    <div class="password-error" *ngIf="(signupForm.get('password').touched || signupForm.get('password').dirty) 
+    && signupForm.get('password').invalid"
+    class="invalidError">Please enter a valid password(must contain one uppercase(A-Z), one lowercase(a-z) and one digit(0-9) and must be of length 6</div>
+
+    <div class="admin">
+      <input formControlName="isAdmin" type="checkbox" id="fruit4" name="fruit-4" value="Strawberry">
+      <label for="fruit4"></label>
+      <p>Register as Admin</p>
     </div>
 
-    <div class="text-box">
-        <i class="fas fa-mobile-alt"></i>
-      <input type="text" placeholder="Mobile Number">
-    </div>
-
-    <div class="text-box">
-        <i class="fas fa-unlock-alt"></i>
-      <input type="password" placeholder="Password">
-    </div>
-
+  <input [disabled]="signupForm.invalid" [ngClass]="{'disabled':signupForm.invalid}" type="submit" class="button shadow" value="Submit">
   
-    <input type="submit" class="button shadow" value="Submit">
-  </div>
+</form>
+</div>
