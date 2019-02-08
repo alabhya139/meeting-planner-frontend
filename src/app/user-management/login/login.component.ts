@@ -58,8 +58,13 @@ export class LoginComponent implements OnInit {
           if(this.userDetails.data.userDetails.isAdmin==true){
             this.router.navigate([`/admin/${this.userDetails.data.userDetails.userId}`]);
           }else this.router.navigate([`/user/${this.userDetails.data.userDetails.userId}`]);
+        }else {
+          this.toasterService.error("Error", this.userDetails.message)
         }
-      })
+      }),
+      error=>{
+        this.toasterService.error("Error", 'Some Error Occured')
+      }
     )
   }
 

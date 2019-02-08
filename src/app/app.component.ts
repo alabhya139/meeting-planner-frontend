@@ -1,6 +1,8 @@
 import { Component, OnInit, DoCheck } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { UserManagementService } from './services/user-management.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -8,34 +10,54 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit,DoCheck {
+export class AppComponent implements OnInit, DoCheck {
 
 
-  constructor(private cookie: CookieService, private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private userService: UserManagementService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toaster: ToastrService) {
   }
 
-  authToken: String
+  authToken =localStorage.getItem('authToken')
   userId = localStorage.getItem('userId') || "";
   isAdmin = localStorage.getItem('isAdmin');
   isLogged
-  user:string
+  logoutResponse
+  user: string
 
 
-  ngDoCheck(){
-    if(this.isAdmin === 'true'){
+  ngDoCheck() {
+    if (this.isAdmin === 'true') {
       this.user = "admin"
-    }else this.user = "user"
+    } else this.user = "user"
     this.isLogged = localStorage.getItem('isLogged');
   }
 
   ngOnInit(): void {
-    console.log(localStorage.getItem('authToken'))
+    console.log()
   }
 
   public logout() {
-    localStorage.clear();
-    this.isLogged = "false";
-    this.router.navigate(['/home/login'])
+    this.userService.logout(this.userId).subscribe(
+      data => {
+        this.logoutResponse = data
+        console.log(this.logoutResponse.error)
+        if (this.logoutResponse.error === false) {
+          this.toaster.success('Success', this.logoutResponse.message);
+          localStorage.clear();
+          this.isLogged = "false";
+          this.router.navigate(['/home/login'])
+        }else{
+          console.log("worked")
+          this.toaster.error('Error', this.logoutResponse.message);
+        }
+      },
+      error=>{
+        this.toaster.error('Error', 'Something Went Wrong');
+      }
+    )
   }
 
   getCookieNames = function (cookie) {

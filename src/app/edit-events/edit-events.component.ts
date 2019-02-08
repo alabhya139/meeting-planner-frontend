@@ -15,6 +15,7 @@ export class EditEventsComponent implements OnInit,DoCheck {
   meetingForm: FormGroup
   meetingId: any
   meeting
+
   hour: any[]=[];
   minute: any[]=[];
   view=0
@@ -138,12 +139,13 @@ export class EditEventsComponent implements OnInit,DoCheck {
   }
 
   deleteMeeting(){
+    console.log(this.meetingId)
     this.meetingService.deleteMeeting(this.meetingId)
       .subscribe(
         data=>{
           if(data.status===200){
             this.toaster.success('Success',data.message);
-            this.router.navigate([`/user/${data.data.userId}`]);
+            this.router.navigate([`/user/${this.userId}`]);
           }else{
             this.toaster.error('Error',data.message);
           }

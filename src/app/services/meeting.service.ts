@@ -85,7 +85,7 @@ export class MeetingService {
   public deleteMeeting(meetingId): Observable<any>{
 
     const params = new HttpParams()
-     .set('meetingId',meetingId)
-    return this.http.get(`${this.baseUrl}delete-meeting`,{params});
+     .set('meetingId',meetingId);
+    return this.http.post(`${this.baseUrl}delete-meeting`,params);
   }
 }
