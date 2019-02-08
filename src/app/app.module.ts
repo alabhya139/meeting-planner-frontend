@@ -19,6 +19,9 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { AdminHomeComponent } from './admin-home/admin-home.component';
 import { MeetingInfoComponent } from './meeting-info/meeting-info.component';
+import { EditEventsComponent } from './edit-events/edit-events.component';
+import { ForgotPasswordSendMailComponent } from './forgot-password-send-mail/forgot-password-send-mail.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import { MeetingInfoComponent } from './meeting-info/meeting-info.component';
     UserHomeComponent,
     CreateEventComponent,
     AdminHomeComponent,
-    MeetingInfoComponent
+    MeetingInfoComponent,
+    EditEventsComponent,
+    ForgotPasswordSendMailComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,

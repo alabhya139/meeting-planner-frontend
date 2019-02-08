@@ -43,3 +43,9 @@
       </mwl-calendar-day-view>
     </div>
   </div>
+
+  <div *ngIf="isAdmin==='true'" [routerLink]="['/create-meeting',userId]" class="btn btn-dark col-md-4 admin-view">
+    Create Meetings
+    <i class="far fa-calendar-plus"></i>
+  </div>
+</div>

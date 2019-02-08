@@ -1,0 +1,123 @@
+body {
+  padding: 4em;
+  background: #e5e5e5;
+  font: 13px/1.4 Geneva, 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+}
+
+label {
+  display: block;
+}
+
+.date-picker {
+  padding: 1vmin;
+  outline: none;
+}
+
+.text-box input {
+  outline: none;
+  width: 100%;
+  padding: 1vmin;
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 3px 5px;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+  padding: 1vmin;
+}
+
+.date input {
+  outline: none;
+  width: 100%;
+  padding: 1vmin;
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 3px 5px;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+  padding: 1vmin;
+  text-align: center;
+}
+
+.formGroup {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+label {
+  color: #fff;
+  margin-top: 2vmin;
+}
+
+select#soflow {
+  background: #fff;
+  color: rgb(41, 41, 41);
+  font-size: inherit;
+  padding: 5px 0px;
+  width: 3em;
+  text-align: center;
+  outline: none;
+  margin-right: 0.5vmin;
+  margin-left: 0.5vmin;
+  border-radius: 5px;
+  border: 1px solid #ffffff;
+}
+
+textarea {
+  outline: none;
+  width: 100%;
+  padding: 1vmin;
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 3px 5px;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.choose-time {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.choose-time i {
+  color: #ffffff;
+}
+
+.time {
+  margin-right: 4vmin;
+}
+
+.date {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.start-date {
+  margin-right: 4vmin;
+}
+
+.heading {
+  text-align: center;
+  font-family: 'Bahiana', cursive;
+  margin: 2vmin;
+  color: #ffffff;
+  font-size: 4em;
+}
+
+#button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2vmin;
+  margin-bottom: 2vmin;
+}
+
+.btn-group{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 2vmin;
+    margin-bottom: 2vmin;
+}

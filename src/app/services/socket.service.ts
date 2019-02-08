@@ -8,18 +8,26 @@ import { Observable } from 'rxjs';
 })
 export class SocketService {
 
-  private url = "localhost:3000"
+  private url = "meetingplannerapi.alabhya.me"
   private socket;
 
   constructor(public http: HttpClient) { 
     this.socket = io(this.url);
   }
 
-  public testSocket = ()=>{
-    return Observable.create((observer)=>{
-      this.socket.on('verify-user',()=>{
-        observer.next("Hello Dear")
-      })
-    })
+  public setUser = (data)=>{
+    this.socket.emit('set-user',data);
+  }
+
+  public createdMeeting = (data)=>{
+    this.socket.emit('event-created',data)
+  }
+
+  public editedMeeting = (data)=>{
+    this.socket.emit('event-edited',data)
+  }
+
+  public snoozedMeeting = (data)=>{
+    this.socket.emit('snooze',data)
   }
 }

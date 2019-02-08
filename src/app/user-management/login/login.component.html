@@ -21,7 +21,7 @@
     <input [ngClass]="{'disabled':loginForm.invalid}" [disabled]="loginForm.invalid" type="submit" class="button shadow" value="Login">
 
     <div class="login-footer">
-      <a href="" class="forgot-password">Forgot Password?</a>
+      <a [routerLink]="['/home/forgot-password']" class="forgot-password">Forgot Password?</a>
       <a [routerLink]="['/home/signup']" class="signup">Don't have an account? Register!</a>
     </div>
   </form>

@@ -8,4 +8,28 @@ li{
     cursor: pointer;
 }
 
+.main-image{
+    width: 40%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.main-heading{
+    text-decoration-style: solid;
+    font-size: 10vmin;
+    font-family: 'Zilla Slab Highlight', cursive;
+    color: #f5f5f5;
+    text-align: center;
+}
+
+.slogan{
+    font-size: 5vmin;
+    font-family: 'Bahiana', cursive;
+    color: #ffffff;
+    text-align: center;
+}
+
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { CanActivate, CanDeactivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
 
@@ -9,13 +9,16 @@ export class MeetingRouteGuardService implements CanActivate{
 
   constructor(private router: Router,private cookie:CookieService) { }
 
+
   canActivate(route: ActivatedRouteSnapshot):boolean{
-    if(this.cookie.get('authToken')===undefined || this.cookie.get('authToken')==="" || this.cookie.get('authToken')===null){
-      this.router.navigate(['/']);
-      console.log("Access Denied")
+    if(localStorage.getItem('authToken')===undefined || localStorage.getItem('authToken')==="" || localStorage.getItem('authToken')===null){
+      this.router.navigate(['/home/login'])
+      console.log("Access Denied"+localStorage.getItem('authToken'));
       return false;
     }else {
       return true;
     }
   }
+
+  canDeactivate
 }

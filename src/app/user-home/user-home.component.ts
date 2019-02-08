@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { CalendarEvent, CalendarMonthViewDay, CalendarEventAction } from 'angular-calendar';
 import {
@@ -17,10 +16,13 @@ import {
   addMonths,
   subDays,
   subWeeks,
-  subMonths
+  subMonths,
+  addHours
 } from 'date-fns';
 import { Observable } from 'rxjs';
 import { MeetingService } from '../services/meeting.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 type CalendarPeriod = 'day' | 'week' | 'month';
 
@@ -79,6 +81,8 @@ function getTimezoneOffsetString(date: Date): string {
   styleUrls: ['user-home.component.css']
 })
 export class UserHomeComponent implements OnInit {
+  isAdmin = localStorage.getItem('isAdmin');
+  meeting
   view: CalendarPeriod = 'month';
 
   prevBtnDisabled: boolean = false;
@@ -110,11 +114,22 @@ export class UserHomeComponent implements OnInit {
     }
   ];
 
-  constructor(private meetingService: MeetingService) {
+  public userId: any
+
+  constructor(
+    private meetingService: MeetingService, 
+    private route: ActivatedRoute,
+    private router: Router,
+    private toaster: ToastrService) {
     this.dateOrViewChanged();
   }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(data=>{
+      this.userId = data;
+      this.userId = this.userId.params.userId;
+      console.log(this.userId)
+    });
     this.fetchEvents();
   }
 
@@ -131,25 +146,25 @@ export class UserHomeComponent implements OnInit {
       day: endOfDay
     }[this.view];
 
-    this.events$ = this.meetingService.getAllMeetings()
+    this.events$ = this.meetingService.getUserMeetings(this.userId)
       .pipe(
         map((results) => {
           let datas = results;
           let meeting = datas['data']
-          
           return meeting.map((meeting) => {
             return {
               id: meeting.meetingId,
               adminId: meeting.adminId,
               userId: meeting.userId,
               title: meeting.meetingTitle,
-              start: new Date(
-                meeting.startDate
-              ),
-              end: new Date(meeting.endDate),
-              actions: this.actions
+              start: addHours(startOfDay(new Date(meeting.startDate)),meeting.startHour),
+              end: addHours(startOfDay(new Date(meeting.endDate)),meeting.endHour)
+              
             };
           });
+        },
+        (error)=>{
+          this.toaster.error('Error','Some Error Occured');
         })
       );
   }
@@ -159,7 +174,7 @@ export class UserHomeComponent implements OnInit {
     events
   }: {
     date: Date;
-    events: Array<CalendarEvent<{ film: Film }>>;
+    events: Array<CalendarEvent>;
   }): void {
     if (isSameMonth(date, this.viewDate)) {
       if (
@@ -175,7 +190,7 @@ export class UserHomeComponent implements OnInit {
   }
 
   eventClicked(event: CalendarEvent): void {
-    console.log(event)
+    this.router.navigate([`/edit-meetings/${event.id}`])
   }
 
 
@@ -217,6 +232,12 @@ export class UserHomeComponent implements OnInit {
     } else if (this.viewDate > this.maxDate) {
       this.changeDate(this.maxDate);
     }
+  }
+
+  isEmpty(str){
+    if(str===""||str===undefined||str===null){
+      return true;
+    }else return false;
   }
 
   beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {

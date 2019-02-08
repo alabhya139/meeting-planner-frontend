@@ -1,8 +1,8 @@
 <div class="container">
-  <h1 class="heading">Create Event</h1>
+  <h1 class="heading">Edit Meetings</h1>
   <div class="col-md-6 formGroup">
 
-    <form [formGroup]="meetingForm" (submit)="createMeeting()">
+    <form [formGroup]="meetingForm" (submit)="editMeeting()">
       <div class="meeting-title text-box">
         <label>Meeting Title</label>
         <input formControlName="meetingTitle" type="text">
@@ -23,7 +23,6 @@
         <div class="time">
           <label>Choose Start Hour</label>
           <select formControlName = "s_Hour" id="soflow">
-            <option>HH</option>
             <option *ngFor="let hour of hour">{{hour}}</option>
           </select>
 
@@ -77,8 +76,14 @@
         <textarea formControlName = "meetingDescription" type="textarea"></textarea>
       </div>
 
-      <div class="submit-button">
-        <input id="button" type="submit" class="btn btn-dark" value="Create Meeting">
+      <div class="btn-group">
+        <div *ngIf="isAdmin=='true'" class="submit-button">
+          <input type="submit" class="btn btn-success" value="Edit Meeting">
+        </div>
+  
+        <div *ngIf="isAdmin=='true'" class="submit-button">
+          <input type="button" (click)="deleteMeeting()" class="btn btn-danger" value="Delete Meeting">
+        </div>
       </div>
     </form>
   </div>

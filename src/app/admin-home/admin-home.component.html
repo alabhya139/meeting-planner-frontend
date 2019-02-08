@@ -1,0 +1,11 @@
+<div class="col-md-6 container">
+    <ul *ngFor="let user of userNotAdmin" class="list-group">
+        <li class="list-group-item">
+            <div class="user-name">{{user.firstName}} &nbsp; {{user.lastName}}</div>
+            <button [routerLink]="['/user',user['userId']]" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Create Meeting">
+                <i class="far fa-calendar-plus"></i>
+              </button>
+            
+        </li>
+    </ul>
+</div>

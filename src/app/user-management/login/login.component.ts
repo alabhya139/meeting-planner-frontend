@@ -5,6 +5,7 @@ import { UserManagementService } from 'src/app/services/user-management.service'
 
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
+import { SocketService } from 'src/app/services/socket.service';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class LoginComponent implements OnInit {
     private service: UserManagementService,
     private cookie: CookieService,
     private router: Router,
-    private toasterService: ToastrService
+    private toasterService: ToastrService,
   ) { }
 
   ngOnInit() {
@@ -47,13 +48,16 @@ export class LoginComponent implements OnInit {
         
         if (this.userDetails.status === 200) {
           this.toasterService.success("Success", this.userDetails.message)
-          localStorage.setItem('userInfo', JSON.stringify(this.userDetails.data.userDetails))
-          this.cookie.set("authToken", this.userDetails.data.authToken);
-          this.cookie.set("userId", this.userDetails.data.userDetails.userId);
-          this.cookie.set("user-name", `${this.userDetails.data.userDetails.firstName} ${this.userDetails.data.userDetails.lastName}`);
-          console.log(this.userDetails.data.userDetails.lastName);
-          this.cookie.set('isAdmin',this.userDetails.data.userDetails.isAdmin)
-          this.router.navigate([`user/${this.userDetails.data.userDetails.userId}`]);
+          localStorage.setItem('userInfo', JSON.stringify(this.userDetails.data.userDetails));
+          localStorage.setItem('authToken',this.userDetails.data.authToken);
+          localStorage.setItem('isAdmin',this.userDetails.data.userDetails.isAdmin);
+          localStorage.setItem('userId',this.userDetails.data.userDetails.userId);
+          localStorage.setItem('isLogged',"true");
+          console.log(typeof localStorage.getItem('isAdmin'))
+          localStorage.setItem('user-name',`${this.userDetails.data.userDetails.firstName} ${this.userDetails.data.userDetails.lastName}`);
+          if(this.userDetails.data.userDetails.isAdmin==true){
+            this.router.navigate([`/admin/${this.userDetails.data.userDetails.userId}`]);
+          }else this.router.navigate([`/user/${this.userDetails.data.userDetails.userId}`]);
         }
       })
     )
