@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
 import { MeetingService } from '../services/meeting.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { SocketService } from '../services/socket.service';
 
 type CalendarPeriod = 'day' | 'week' | 'month';
 
@@ -120,11 +121,26 @@ export class UserHomeComponent implements OnInit {
     private meetingService: MeetingService, 
     private route: ActivatedRoute,
     private router: Router,
+    private socketService: SocketService,
     private toaster: ToastrService) {
     this.dateOrViewChanged();
   }
 
   ngOnInit(): void {
+    let userDetails ={
+      userId:localStorage.getItem('userId')
+    }
+    this.socketService.onVerify(userDetails).subscribe()
+    this.socketService.onCreateEvent(userDetails.userId).subscribe(
+      data=>{
+        console.log(data)
+        if(data.isCreated===true){
+          this.toaster.show('New Meeting Created',`Meeting Title: ${data.data.meetingTitle} Admin Name: ${data.adminName}\n Start Date: ${data.data.startDate}`)
+        }else this.toaster.show('Your Meeting Edited',`Meeting Title: ${data.data.meetingTitle} Admin Name: ${data.adminName}\n Start Date: ${data.data.startDate}`)
+
+      }
+    )
+
     this.route.paramMap.subscribe(data=>{
       this.userId = data;
       this.userId = this.userId.params.userId;
@@ -191,6 +207,7 @@ export class UserHomeComponent implements OnInit {
 
   eventClicked(event: CalendarEvent): void {
     this.router.navigate([`/edit-meetings/${event.id}`])
+    console.log(event.id)
   }
 
 

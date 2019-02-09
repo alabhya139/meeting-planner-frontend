@@ -15,8 +15,29 @@ export class SocketService {
     this.socket = io(this.url);
   }
 
-  public setUser = (data)=>{
-    this.socket.emit('set-user',data);
+  public onVerify = (userDetails)=>{
+    return Observable.create((observer)=>{
+      this.socket.on('verify-user',data=>{
+        observer.next(data);
+        this.socket.emit('set-user',userDetails);
+      })
+    })
+  }
+
+  public onCreateEvent =(userId)=>{
+    return Observable.create((observer)=>{
+      this.socket.on(userId,(data)=>{
+        observer.next(data);
+      })
+    })
+  }
+
+  public onEditEvent =(userId)=>{
+    return Observable.create((observer)=>{
+      this.socket.on(userId,(data)=>{
+        observer.next(data);
+      })
+    })
   }
 
   public createdMeeting = (data)=>{

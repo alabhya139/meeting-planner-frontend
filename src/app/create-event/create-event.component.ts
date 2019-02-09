@@ -25,6 +25,7 @@ export class CreateEventComponent implements OnInit {
     private cookie: CookieService,
     private route: ActivatedRoute,
     private router: Router,
+    private socketService: SocketService,
     private userService: UserManagementService,
     private meetingService: MeetingService,
     private toaster: ToastrService) { }
@@ -32,6 +33,7 @@ export class CreateEventComponent implements OnInit {
   inff:number
   userId
   userEmail
+  userInfo
 
   ngOnInit() {
     this.route.paramMap.subscribe(
@@ -40,6 +42,13 @@ export class CreateEventComponent implements OnInit {
         this.userId =  this.userId.params.userId;
       }
     );
+
+    this.userService.getUserById(this.userId).subscribe(
+      response=>{
+        this.userInfo = response;
+        this.userEmail = this.userInfo.data.email;
+      }
+    )
     for(let i=1;i<13;i++){
       if(i<10){
         this.hour.push("0"+i);
@@ -99,6 +108,9 @@ export class CreateEventComponent implements OnInit {
         data=>{
           this.response = data;
           if(this.response.status===200){
+            this.response.adminName = localStorage.getItem('user-name')
+            this.response.email = this.userEmail;
+            this.socketService.createdMeeting(this.response)
             this.toaster.success('Success',this.response.message);
             this.router.navigate([`/user/${this.userId}`]);
           }else {

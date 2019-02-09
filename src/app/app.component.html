@@ -10,8 +10,8 @@
 
     <div class="collapse navbar-collapse pull-right" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li *ngIf="user!=='admin'" class="nav-item active">
-          <a class="nav-link" [routerLink]="['/user',userId]">Home</a>
+        <li *ngIf="user==='user'" class="nav-item active">
+          <a class="nav-link" [routerLink]="['user',userId]">Home</a>
         </li>
         <li *ngIf="user==='admin'" class="nav-item active">
           <a class="nav-link" [routerLink]="['/admin',userId]">Home</a>

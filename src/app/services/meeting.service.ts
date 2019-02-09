@@ -86,6 +86,6 @@ export class MeetingService {
 
     const params = new HttpParams()
      .set('meetingId',meetingId);
-    return this.http.post(`${this.baseUrl}delete-meeting`,params);
+    return this.http.get(`${this.baseUrl}delete-meeting`,{params});
   }
 }

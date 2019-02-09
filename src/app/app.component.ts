@@ -3,6 +3,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserManagementService } from './services/user-management.service';
 import { ToastrService } from 'ngx-toastr';
+import { SocketService } from './services/socket.service';
 
 
 @Component({
@@ -17,18 +18,21 @@ export class AppComponent implements OnInit, DoCheck {
     private userService: UserManagementService,
     private router: Router,
     private route: ActivatedRoute,
+    private socketService: SocketService,
     private toaster: ToastrService) {
   }
 
   authToken =localStorage.getItem('authToken')
-  userId = localStorage.getItem('userId') || "";
-  isAdmin = localStorage.getItem('isAdmin');
+  isAdmin
   isLogged
+  userId
   logoutResponse
   user: string
 
 
   ngDoCheck() {
+    this.userId = localStorage.getItem('userId')
+    this.isAdmin = localStorage.getItem('isAdmin');
     if (this.isAdmin === 'true') {
       this.user = "admin"
     } else this.user = "user"
@@ -36,7 +40,7 @@ export class AppComponent implements OnInit, DoCheck {
   }
 
   ngOnInit(): void {
-    console.log()
+
   }
 
   public logout() {

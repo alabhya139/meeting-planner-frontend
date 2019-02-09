@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
     private service: UserManagementService,
     private cookie: CookieService,
     private router: Router,
-    private toasterService: ToastrService,
+    private toasterService: ToastrService
   ) { }
 
   ngOnInit() {

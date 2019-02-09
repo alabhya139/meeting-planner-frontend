@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MeetingService } from '../services/meeting.service';
 import { ToastrService } from 'ngx-toastr';
+import { SocketService } from '../services/socket.service';
+import { UserManagementService } from '../services/user-management.service';
 
 @Component({
   selector: 'app-edit-events',
@@ -15,12 +17,15 @@ export class EditEventsComponent implements OnInit,DoCheck {
   meetingForm: FormGroup
   meetingId: any
   meeting
+  permission=true;
 
   hour: any[]=[];
   minute: any[]=[];
   view=0
   userId
   isAdmin = localStorage.getItem('isAdmin');
+  userInfo
+  userEmail: any;
 
   constructor(
     private fb: FormBuilder, 
@@ -28,16 +33,45 @@ export class EditEventsComponent implements OnInit,DoCheck {
     private router: Router,
     private meetingService: MeetingService,
     private toaster: ToastrService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private socketService: SocketService,
+    private userService: UserManagementService
   ) { }
 
 
 
   ngDoCheck(){
     this.cd.markForCheck()
-    if(this.meeting!==undefined && this.view===0){
+
+    this.route.paramMap.subscribe(
+      data=>{
+        this.meetingId = data;
+        this.meetingId = this.meetingId.params.meetingId;
+      }
+    );
+
+    if((this.meeting!==undefined && this.meeting!==null && this.meeting!=="") && this.view===0){
+      console.log(this.meeting!==undefined)
+      if(this.meeting.data.adminId===localStorage.getItem('userId')){
+        this.permission = true;
+      }else this.permission = false;
+
+      console.log(this.meeting.data.meetingId)
+
+      console.log(this.permission)
       console.log(this.meeting && this.view===0)
       this.userId=this.meeting.data.userId;
+
+      this.userService.getUserById(this.userId).subscribe(
+        response=>{
+          this.userInfo = response;
+          console.log(this.userInfo)
+          if(this.userInfo!==undefined && this.userInfo!==null && this.userInfo!==""){
+            this.userEmail = this.userInfo.data.email;
+          }
+        }
+      )
+      
       this.meetingForm = this.fb.group({
         meetingTitle: [this.meeting.data.meetingTitle],
         meetingPlace: [this.meeting.data.meetingPlace],
@@ -60,6 +94,19 @@ export class EditEventsComponent implements OnInit,DoCheck {
   }
 
   ngOnInit() {
+    let userDetails ={
+      userId:localStorage.getItem('userId')
+    }
+    this.socketService.onCreateEvent(userDetails.userId).subscribe(
+      data=>{
+        console.log(data)
+        if(data.isCreated===true){
+          this.toaster.show('New Meeting Created',`Meeting Title: ${data.data.meetingTitle} Admin Name: ${data.adminName}\n Start Date: ${data.data.startDate}`)
+        }else this.toaster.show('Your Meeting Edited',`Meeting Title: ${data.data.meetingTitle} Admin Name: ${data.adminName}\n Start Date: ${data.data.startDate}`)
+
+      }
+    )
+
     for(let i=1;i<13;i++){
       if(i<10){
         this.hour.push("0"+i);
@@ -88,14 +135,14 @@ export class EditEventsComponent implements OnInit,DoCheck {
       endMinute: [''],
       endTime: ['']
     });
-    
+
     this.route.paramMap.subscribe(
       data=>{
         this.meetingId = data;
         this.meetingId = this.meetingId.params.meetingId;
+        console.log(this.meetingId)
       }
     );
-
     
     this.meetingService.getMeetingById(this.meetingId)
       .subscribe(
@@ -114,10 +161,14 @@ export class EditEventsComponent implements OnInit,DoCheck {
     formValue.userId = this.userId;
     console.log(formValue)
 
-    this.meetingService.editMeetings(this.meetingId,formValue)
+    if(this.permission === true){
+      this.meetingService.editMeetings(this.meetingId,formValue)
       .subscribe(
         data=>{
           if(data.status===200){
+            let response = data;
+            response.adminName = localStorage.getItem('user-name')
+            this.socketService.editedMeeting(response);
             this.toaster.success('Success',data.message);
             this.router.navigate([`/user/${data.data.userId}`]);
           }else{
@@ -128,6 +179,7 @@ export class EditEventsComponent implements OnInit,DoCheck {
           this.toaster.error('Error','Some Error Occured!');
         }
       );
+    }else this.toaster.error('Error','Access Denied')
   }
 
   changeToHour(hour,min,str):number{
